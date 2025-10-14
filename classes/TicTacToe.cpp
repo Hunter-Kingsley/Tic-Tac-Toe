@@ -1,4 +1,5 @@
 #include "TicTacToe.h"
+#include "../Logger.h"
 
 // -----------------------------------------------------------------------------
 // TicTacToe.cpp
@@ -58,6 +59,19 @@ void TicTacToe::setUpBoard()
     // then we need to setup our 3x3 array in _grid with the correct position of the square, and load the "square.png" sprite for each square
     // we will use the initHolder function on each square to do this
     // finally we should call startGame to get everything going
+
+    setNumberOfPlayers(2);
+    _gameOptions.rowX = 3;
+    _gameOptions.rowY = 3;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            ImVec2 position((float)i * 100 + 10, (float)j * 100 + 30);
+            _grid[i][j].initHolder(position, "square.png", i, j);
+        }
+    }    
+
+    startGame();
 }
 
 //
