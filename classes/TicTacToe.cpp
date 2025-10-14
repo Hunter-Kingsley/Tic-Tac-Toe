@@ -144,8 +144,16 @@ Player* TicTacToe::ownerAt(int index ) const
     // index is 0..8, convert to x,y using:
     // y = index / 3
     // x = index % 3 
+    int y = index / 3;
+    int x = index % 3;
     // if there is no bit at that location (in _grid) return nullptr
     // otherwise return the owner of the bit at that location using getOwner()
+    if (_grid[x][y].bit() == nullptr) {
+        return nullptr;
+    } else {
+        return _grid[x][y].bit()->getOwner();
+    }
+    
     return nullptr;
 }
 
