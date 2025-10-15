@@ -71,6 +71,10 @@ void TicTacToe::setUpBoard()
         }
     }    
 
+    if (gameHasAI()) {
+        setAIPlayer(AI_PLAYER);
+    }
+
     startGame();
 }
 
@@ -241,7 +245,7 @@ std::string TicTacToe::stateString() const
     // if the bit is null, add '0' to the string
     // finally, return the constructed string
     std::string stateString = "000000000";
-
+    
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (_grid[i][j].bit() != nullptr) {
@@ -302,5 +306,93 @@ void TicTacToe::setStateString(const std::string &s)
 void TicTacToe::updateAI() 
 {
     // we will implement the AI in the next assignment!
+
+    int bestMove = -1000;
+    int bestSquare = -1;
+    _recursions = 0;
+
+    std::string state = stateString();
+    for (int i = 0; i < 9; i++) {
+        if (state[i] == '0') {
+            state[i] = '2';
+            int result = -negamax(state, 0, HUMAN_PLAYER);
+            if (result > bestMove) {
+                bestMove = result;
+                bestSquare = i;
+            }
+            state[i] = '0';
+        }
+    }
+
+    if (bestSquare != -1) {
+        int xcol = bestSquare % 3;
+        int ycol = bestSquare / 3;
+        BitHolder *holder = &_grid[ycol][xcol];
+        actionForEmptyHolder(holder);
+        endTurn();
+        std::cout << "Recursions: " << _recursions << std::endl;
+    }
+}
+
+bool aiBoardFull(const std::string& state) {
+    return state.find('0') == std::string::npos;
+}
+
+int aiWinner(const std::string& state) {
+    std::vector<std::vector<int>> winningCombos;
+    winningCombos.push_back({0,1,2});
+    winningCombos.push_back({3,4,5});
+    winningCombos.push_back({6,7,8});
+    winningCombos.push_back({0,3,6});
+    winningCombos.push_back({1,4,7});
+    winningCombos.push_back({2,5,8});
+    winningCombos.push_back({0,4,8});
+    winningCombos.push_back({2,4,6});
+
+    for (std::vector<int> combo: winningCombos) {
+        if (state[combo[0]] == state[combo[1]] && state[combo[1]] == state[combo[2]]) {
+            return 10;
+        }
+    }
+
+    return 0;
+}
+
+
+
+/*
+function negamax(node, depth, color) is
+    if depth = 0 or node is a terminal node then
+        return color × the heuristic value of node
+    value := −∞
+    for each child of node do
+        value := max(value, −negamax(child, depth − 1, −color))
+    return value
+*/
+int TicTacToe::negamax(std::string& state, int depth, int playerColor) {
+    _recursions++;
+    int bestVal = -1000;
+    int boardWinner = aiWinner(state);
+    if (boardWinner) {
+        return -boardWinner;
+    }
+    bool boardFull = aiBoardFull(state);
+    if (boardFull) {
+        // draw
+        return 0;
+    }
+
+    for (int i = 0; i < 9; i++) {
+        if (state[i] == '0') {
+            state[i] = playerColor == HUMAN_PLAYER ? '2' : '1';
+            int result = -negamax(state, depth + 1, -playerColor);
+            if (result > bestVal) {
+                bestVal = result;
+            }
+            state[i] = '0';
+        }
+    }
+
+    return bestVal;
 }
 

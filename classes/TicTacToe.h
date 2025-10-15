@@ -34,7 +34,10 @@ public:
 private:
     Bit *       PieceForPlayer(const int playerNumber);
     Player*     ownerAt(int index ) const;
+    int         negamax(std::string& state, int depth, int playerColor);
 
     Square      _grid[3][3];
+
+    int         _recursions;
 };
 
