@@ -291,7 +291,7 @@ void TicTacToe::setStateString(const std::string &s)
             if (playerNumber == 0) {
                 _grid[i][j].setBit(nullptr);
             } else {
-                Bit* newBit = PieceForPlayer(playerNumber);
+                Bit* newBit = PieceForPlayer(playerNumber - 1);
                 _grid[i][j].setBit(newBit);
                 newBit->setPosition(_grid[i][j].getPosition());
             }
@@ -327,7 +327,7 @@ void TicTacToe::updateAI()
     if (bestSquare != -1) {
         int xcol = bestSquare % 3;
         int ycol = bestSquare / 3;
-        BitHolder *holder = &_grid[ycol][xcol];
+        BitHolder *holder = &_grid[xcol][ycol];
         actionForEmptyHolder(holder);
         endTurn();
         std::cout << "Recursions: " << _recursions << std::endl;
@@ -350,7 +350,8 @@ int aiWinner(const std::string& state) {
     winningCombos.push_back({2,4,6});
 
     for (std::vector<int> combo: winningCombos) {
-        if (state[combo[0]] == state[combo[1]] && state[combo[1]] == state[combo[2]]) {
+        //std::cout << state[combo[0]]  << " == " << state[combo[1]] << " == " << state[combo[2]] << std::endl;
+        if (state[combo[0]] == state[combo[1]] && state[combo[1]] == state[combo[2]] && state[combo[0]] != '0') {
             return 10;
         }
     }
@@ -385,7 +386,7 @@ int TicTacToe::negamax(std::string& state, int depth, int playerColor) {
     for (int i = 0; i < 9; i++) {
         if (state[i] == '0') {
             state[i] = playerColor == HUMAN_PLAYER ? '2' : '1';
-            int result = -negamax(state, depth + 1, -playerColor);
+            int result = -negamax(state, depth + 1, 1 - playerColor);
             if (result > bestVal) {
                 bestVal = result;
             }
