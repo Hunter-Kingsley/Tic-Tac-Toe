@@ -280,6 +280,19 @@ void TicTacToe::setStateString(const std::string &s)
     // loop through the 3x3 array and set each square accordingly
     // the string should always be valid, so you don't need to check its length or contents
     // but you can assume it will always be 9 characters long and only contain '0', '1', or '2'
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            auto playerNumber = s[i + (3 * j)] - '0';
+            if (playerNumber == 0) {
+                _grid[i][j].setBit(nullptr);
+            } else {
+                Bit* newBit = PieceForPlayer(playerNumber);
+                _grid[i][j].setBit(newBit);
+                newBit->setPosition(_grid[i][j].getPosition());
+            }
+        }
+    }
 }
 
 
