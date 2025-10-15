@@ -178,6 +178,23 @@ Player* TicTacToe::checkForWinner()
 
     // Hint: Consider using an array to store the winning combinations
     // to avoid repetitive code
+
+    std::vector<std::vector<int>> winningCombos;
+    winningCombos.push_back({0,1,2});
+    winningCombos.push_back({3,4,5});
+    winningCombos.push_back({6,7,8});
+    winningCombos.push_back({0,3,6});
+    winningCombos.push_back({1,4,7});
+    winningCombos.push_back({2,5,8});
+    winningCombos.push_back({0,4,8});
+    winningCombos.push_back({2,4,6});
+
+    for (std::vector<int> combo: winningCombos) {
+        if (ownerAt(combo[0]) == ownerAt(combo[1]) && ownerAt(combo[1]) == ownerAt(combo[2])) {
+            return ownerAt(combo[0]);
+        }
+    }
+
     return nullptr;
 }
 
