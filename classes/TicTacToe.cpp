@@ -190,7 +190,7 @@ Player* TicTacToe::checkForWinner()
     winningCombos.push_back({2,4,6});
 
     for (std::vector<int> combo: winningCombos) {
-        if (ownerAt(combo[0]) == ownerAt(combo[1]) && ownerAt(combo[1]) == ownerAt(combo[2])) {
+        if (ownerAt(combo[0]) == ownerAt(combo[1]) && ownerAt(combo[1]) == ownerAt(combo[2]) && ownerAt(combo[0]) != nullptr) {
             return ownerAt(combo[0]);
         }
     }
@@ -240,7 +240,18 @@ std::string TicTacToe::stateString() const
     // remember that player numbers are zero-based, so add 1 to get '1' or '2'
     // if the bit is null, add '0' to the string
     // finally, return the constructed string
-    return "000000000";
+    std::string stateString = "000000000";
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (_grid[i][j].bit() != nullptr) {
+                int playerNum = _grid[i][j].bit()->getOwner()->playerNumber() + 1;
+                stateString[i + (3 * j)] = static_cast<char>('0' + playerNum);
+            }
+        }
+    }
+
+    return stateString;
 }
 
 //
