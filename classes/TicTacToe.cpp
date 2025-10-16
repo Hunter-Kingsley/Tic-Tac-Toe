@@ -352,7 +352,9 @@ int aiWinner(const std::string& state) {
     for (std::vector<int> combo: winningCombos) {
         //std::cout << state[combo[0]]  << " == " << state[combo[1]] << " == " << state[combo[2]] << std::endl;
         if (state[combo[0]] == state[combo[1]] && state[combo[1]] == state[combo[2]] && state[combo[0]] != '0') {
-            return 10;
+            if (state[combo[0]] == '2') {
+                return 10;
+            }
         }
     }
 
@@ -385,7 +387,7 @@ int TicTacToe::negamax(std::string& state, int depth, int playerColor) {
 
     for (int i = 0; i < 9; i++) {
         if (state[i] == '0') {
-            state[i] = playerColor == HUMAN_PLAYER ? '2' : '1';
+            state[i] = playerColor == HUMAN_PLAYER ? '1' : '2';
             int result = -negamax(state, depth + 1, 1 - playerColor);
             if (result > bestVal) {
                 bestVal = result;
