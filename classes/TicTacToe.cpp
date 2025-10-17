@@ -352,9 +352,7 @@ int aiWinner(const std::string& state) {
     for (std::vector<int> combo: winningCombos) {
         //std::cout << state[combo[0]]  << " == " << state[combo[1]] << " == " << state[combo[2]] << std::endl;
         if (state[combo[0]] == state[combo[1]] && state[combo[1]] == state[combo[2]] && state[combo[0]] != '0') {
-            if (state[combo[0]] == '2') {
-                return 10;
-            }
+            return 10;
         }
     }
 
